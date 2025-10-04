@@ -6,7 +6,7 @@ services:
     deploy:
       resources:
         limits:
-          memory: 3350M
+          memory: 4500M
     environment:
       EULA: "true"
       MODPACK_PLATFORM: AUTO_CURSEFORGE
@@ -17,7 +17,7 @@ services:
       CF_API_KEY: ${CF_API_KEY}
       CF_FORCE_SYNCHRONIZE: "true"
       CF_PAGE_URL: https://www.curseforge.com/minecraft/modpacks/all-the-mods-9-no-frills
-      MEMORY: 3000M
+      MEMORY: 4000M
       # Enable RCON for backup coordination
       ENABLE_RCON: "true"
       RCON_PASSWORD: ${RCON_PASSWORD:-atm9nfbackup2024}
