@@ -1,5 +1,5 @@
 services:
-  mc:
+  mc-valhesia6:
     image: itzg/minecraft-server
     ports:
       - "25565:25565"
@@ -12,8 +12,8 @@ services:
       # Refer to https://docker-minecraft-server.readthedocs.io/en/latest/types-and-platforms/mod-platforms/auto-curseforge/#api-key
       CF_API_KEY: ${CF_API_KEY}
       CF_FORCE_SYNCHRONIZE: "true"
-      CF_PAGE_URL: https://www.curseforge.com/minecraft/modpacks/valhelsia-5/files/4429560
-      MEMORY: 4G
+      CF_PAGE_URL: https://www.curseforge.com/minecraft/modpacks/valhelsia-6
+      MEMORY: 3.5G
     volumes:
       - data:/data
 
