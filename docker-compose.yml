@@ -6,10 +6,31 @@ services:
     deploy:
       resources:
         limits:
-          memory: 3500M
+          memory: 3350M
     environment:
       EULA: "true"
       MODPACK_PLATFORM: AUTO_CURSEFORGE
+      # Optimized JVM arguments for low memory (3.3GB) with GraalVM
+      JVM_OPTS: >-
+        -Xms3000M -Xmx3000M
+        -XX:+UseG1GC
+        -XX:+ParallelRefProcEnabled
+        -XX:MaxGCPauseMillis=200
+        -XX:+UnlockExperimentalVMOptions
+        -XX:+DisableExplicitGC
+        -XX:+AlwaysPreTouch
+        -XX:G1NewSizePercent=20
+        -XX:G1MaxNewSizePercent=30
+        -XX:G1HeapRegionSize=8M
+        -XX:G1ReservePercent=20
+        -XX:G1HeapWastePercent=5
+        -XX:G1MixedGCCountTarget=4
+        -XX:InitiatingHeapOccupancyPercent=15
+        -XX:G1MixedGCLiveThresholdPercent=90
+        -XX:G1RSetUpdatingPauseTimePercent=5
+        -XX:SurvivorRatio=32
+        -XX:+PerfDisableSharedMem
+        -XX:MaxTenuringThreshold=1
       # Allocate API key from https://console.curseforge.com/
       # and set in .env file making sure to double up dollar signs, such as
       # CF_API_KEY=$$2a$$10$$....
