@@ -13,7 +13,7 @@ services:
       CF_API_KEY: ${CF_API_KEY}
       CF_FORCE_SYNCHRONIZE: "true"
       CF_PAGE_URL: https://www.curseforge.com/minecraft/modpacks/all-the-mods-9-no-frills
-      MEMORY: 3700M
+      MEMORY: 3350M
       # Enable RCON for backup coordination
       ENABLE_RCON: "true"
       RCON_PASSWORD: ${RCON_PASSWORD:-atm9nfbackup2024}
