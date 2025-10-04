@@ -15,7 +15,4 @@ services:
       CF_PAGE_URL: https://www.curseforge.com/minecraft/modpacks/valhelsia-6
       MEMORY: 3.5G
     volumes:
-      - data:/data
-
-volumes:
-  data: {}
+      - ./data:/data
