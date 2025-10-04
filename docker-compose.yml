@@ -14,5 +14,24 @@ services:
       CF_FORCE_SYNCHRONIZE: "true"
       CF_PAGE_URL: https://www.curseforge.com/minecraft/modpacks/valhelsia-6
       MEMORY: 3.5G
+      # Enable RCON for backup coordination
+      ENABLE_RCON: "true"
+      RCON_PASSWORD: ${RCON_PASSWORD:-valhesia6backup2024}
     volumes:
       - ./data:/data
+
+  backup:
+    image: itzg/mc-backup
+    depends_on:
+      - mc-valhesia6
+    environment:
+      BACKUP_INTERVAL: "1h"  # Backup every hour
+      RCON_HOST: mc-valhesia6
+      RCON_PASSWORD: ${RCON_PASSWORD:-valhesia6backup2024}
+      PRUNE_BACKUPS_DAYS: 7  # Keep backups for 7 days
+      INITIAL_DELAY: 5m  # Wait 5 minutes before first backup
+    volumes:
+      # Mount server data as read-only
+      - ./data:/data:ro
+      # Backup destination
+      - ./backups:/backups
