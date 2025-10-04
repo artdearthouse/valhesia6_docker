@@ -1,157 +1,157 @@
 # Valhelsia 6 Docker Server
 
-Докеризированный сервер Minecraft с модпаком Valhelsia 6 и автоматическими бэкапами.
+Dockerized Minecraft server with Valhelsia 6 modpack and automatic backups.
 
-## Особенности
+## Features
 
-- 🎮 Модпак Valhelsia 6 с автоматической загрузкой через CurseForge
-- 💾 Автоматические ежечасные бэкапы с ротацией
-- ☕ Java 21 GraalVM для оптимальной производительности
-- 🐳 Простое развертывание через Docker Compose
+- 🎮 Valhelsia 6 modpack with automatic download via CurseForge
+- 💾 Automatic hourly backups with rotation
+- ☕ Java 21 GraalVM for optimal performance
+- 🐳 Simple deployment via Docker Compose
 
-## Требования
+## Requirements
 
-- Docker и Docker Compose
-- Минимум 4GB оперативной памяти
-- API ключ CurseForge (бесплатный)
+- Docker and Docker Compose
+- Minimum 4GB RAM
+- CurseForge API key (free)
 
-## Быстрый старт
+## Quick Start
 
-### 1. Получение API ключа CurseForge
+### 1. Get CurseForge API Key
 
-1. Зарегистрируйтесь на [CurseForge Console](https://console.curseforge.com/)
-2. Создайте новый API ключ
-3. Скопируйте ключ для следующего шага
+1. Register at [CurseForge Console](https://console.curseforge.com/)
+2. Create a new API key
+3. Copy the key for the next step
 
-### 2. Настройка переменных окружения
+### 2. Configure Environment Variables
 
-Создайте файл `.env` в корне проекта:
+Create `.env` file in project root:
 
 ```bash
 cp .env.example .env
 ```
 
-Отредактируйте `.env` и добавьте ваш API ключ:
+Edit `.env` and add your API key:
 
 ```env
-CF_API_KEY=$$2a$$10$$...ваш_ключ...
+CF_API_KEY=$$2a$$10$$...your_key...
 ```
 
-⚠️ **Важно**: Удвойте знаки доллара в ключе (`$` → `$$`)
+⚠️ **Important**: Double the dollar signs in the key (`$` → `$$`)
 
-### 3. Запуск сервера
+### 3. Start the Server
 
 ```bash
 docker compose up -d
 ```
 
-Сервер будет доступен на порту `25565`.
+Server will be available on port `25565`.
 
-## Конфигурация
+## Configuration
 
-### Параметры сервера
+### Server Settings
 
-В `docker-compose.yml` можно настроить:
+Configurable in `docker-compose.yml`:
 
-- `MEMORY`: Объем выделенной памяти (по умолчанию 3.5G)
-- `RCON_PASSWORD`: Пароль для RCON подключения (используется для бэкапов)
+- `MEMORY`: Allocated memory (default 3.5G)
+- `RCON_PASSWORD`: Password for RCON connection (used for backups)
 
-### Настройки бэкапов
+### Backup Settings
 
-Контейнер `backup` автоматически создает резервные копии:
+The `backup` container automatically creates backups:
 
-- **Частота**: Каждый час
-- **Хранение**: 7 дней (старые удаляются автоматически)
-- **Расположение**: `./backups/`
-- **Формат**: tar.gz архивы с временными метками
+- **Frequency**: Every hour
+- **Retention**: 7 days (old backups are pruned automatically)
+- **Location**: `./backups/`
+- **Format**: tar.gz archives with timestamps
 
-Параметры можно изменить в `docker-compose.yml`:
+Parameters can be modified in `docker-compose.yml`:
 
 ```yaml
-BACKUP_INTERVAL: "1h"      # Интервал бэкапов
-PRUNE_BACKUPS_DAYS: 7      # Дней хранения
-INITIAL_DELAY: 5m          # Задержка перед первым бэкапом
+BACKUP_INTERVAL: "1h"      # Backup interval
+PRUNE_BACKUPS_DAYS: 7      # Days to keep backups
+INITIAL_DELAY: 5m          # Delay before first backup
 ```
 
-### Ручной бэкап
+### Manual Backup
 
-Для создания бэкапа вне расписания:
+To create a backup outside the schedule:
 
 ```bash
 docker compose exec backup backup now
 ```
 
-## Структура проекта
+## Project Structure
 
 ```
 valhesia6_docker/
-├── docker-compose.yml   # Конфигурация контейнеров
-├── .env                 # Переменные окружения
-├── data/               # Данные сервера Minecraft
-└── backups/            # Резервные копии
+├── docker-compose.yml   # Container configuration
+├── .env                 # Environment variables
+├── data/               # Minecraft server data
+└── backups/            # Backup files
 ```
 
-## Управление сервером
+## Server Management
 
-### Просмотр логов
+### View Logs
 
 ```bash
-# Логи сервера Minecraft
+# Minecraft server logs
 docker compose logs -f mc-valhesia6
 
-# Логи бэкапов
+# Backup logs
 docker compose logs -f backup
 ```
 
-### Остановка сервера
+### Stop Server
 
 ```bash
 docker compose down
 ```
 
-### Обновление модпака
+### Update Modpack
 
-Модпак обновляется автоматически при перезапуске благодаря `CF_FORCE_SYNCHRONIZE: "true"`.
+The modpack updates automatically on restart thanks to `CF_FORCE_SYNCHRONIZE: "true"`.
 
-## Восстановление из бэкапа
+## Restore from Backup
 
-1. Остановите сервер:
+1. Stop the server:
    ```bash
    docker compose down
    ```
 
-2. Найдите нужный бэкап в `./backups/`
+2. Find the desired backup in `./backups/`
 
-3. Восстановите данные:
+3. Restore the data:
    ```bash
    tar -xzvf backups/world-YYYYMMDD-HHMMSS.tar.gz -C data/
    ```
 
-4. Запустите сервер:
+4. Start the server:
    ```bash
    docker compose up -d
    ```
 
-## Решение проблем
+## Troubleshooting
 
-### Сервер не запускается
+### Server Won't Start
 
-- Проверьте правильность API ключа CurseForge
-- Убедитесь, что порт 25565 не занят
-- Проверьте логи: `docker compose logs mc-valhesia6`
+- Check CurseForge API key is correct
+- Ensure port 25565 is not in use
+- Check logs: `docker compose logs mc-valhesia6`
 
-### Бэкапы не создаются
+### Backups Not Created
 
-- Проверьте, что RCON включен и пароли совпадают
-- Проверьте логи бэкап-контейнера: `docker compose logs backup`
-- Убедитесь, что есть права на запись в папку `./backups/`
+- Verify RCON is enabled and passwords match
+- Check backup container logs: `docker compose logs backup`
+- Ensure write permissions for `./backups/` directory
 
-## Технологии
+## Technologies
 
-- [itzg/minecraft-server](https://github.com/itzg/docker-minecraft-server) - Docker образ сервера Minecraft
-- [itzg/mc-backup](https://github.com/itzg/docker-mc-backup) - Система автоматических бэкапов
-- [Valhelsia 6](https://www.curseforge.com/minecraft/modpacks/valhelsia-6) - Модпак
+- [itzg/minecraft-server](https://github.com/itzg/docker-minecraft-server) - Minecraft server Docker image
+- [itzg/mc-backup](https://github.com/itzg/docker-mc-backup) - Automatic backup system
+- [Valhelsia 6](https://www.curseforge.com/minecraft/modpacks/valhelsia-6) - Modpack
 
-## Лицензия
+## License
 
 MIT
