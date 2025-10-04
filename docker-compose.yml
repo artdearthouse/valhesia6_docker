@@ -1,5 +1,5 @@
 services:
-  mc-valhesia6:
+  mc-atm9nf:
     image: itzg/minecraft-server:java21-graalvm
     ports:
       - "25565:25565"
@@ -12,22 +12,22 @@ services:
       # Refer to https://docker-minecraft-server.readthedocs.io/en/latest/types-and-platforms/mod-platforms/auto-curseforge/#api-key
       CF_API_KEY: ${CF_API_KEY}
       CF_FORCE_SYNCHRONIZE: "true"
-      CF_PAGE_URL: https://www.curseforge.com/minecraft/modpacks/valhelsia-6
-      MEMORY: 3.5G
+      CF_PAGE_URL: https://www.curseforge.com/minecraft/modpacks/all-the-mods-9-no-frills
+      MEMORY: 3.75G
       # Enable RCON for backup coordination
       ENABLE_RCON: "true"
-      RCON_PASSWORD: ${RCON_PASSWORD:-valhesia6backup2024}
+      RCON_PASSWORD: ${RCON_PASSWORD:-atm9nfbackup2024}
     volumes:
       - ./data:/data
 
   backup:
     image: itzg/mc-backup
     depends_on:
-      - mc-valhesia6
+      - mc-atm9nf
     environment:
       BACKUP_INTERVAL: "1h"  # Backup every hour
-      RCON_HOST: mc-valhesia6
-      RCON_PASSWORD: ${RCON_PASSWORD:-valhesia6backup2024}
+      RCON_HOST: mc-atm9nf
+      RCON_PASSWORD: ${RCON_PASSWORD:-atm9nfbackup2024}
       PRUNE_BACKUPS_DAYS: 7  # Keep backups for 7 days
       INITIAL_DELAY: 5m  # Wait 5 minutes before first backup
     volumes:
